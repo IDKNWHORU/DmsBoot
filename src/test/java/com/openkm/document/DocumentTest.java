@@ -8,13 +8,12 @@ import java.io.InputStream;
 
 public class DocumentTest {
     public static void main(String... args) {
-        InputStream is = null;
+        InputStream is;
 
         try {
             is = new FileInputStream("D:\\test.txt");
-            Document doc = new Document();
+            Document doc = new Document("test document");
             doc.setPath("/okm:root/test.txt");
-            doc.setTitle("test document");
             doc.getKeywords().add("key1");
             doc.getKeywords().add("key2");
             doc = OKMDocument.getInstance().create(null, doc, is);
