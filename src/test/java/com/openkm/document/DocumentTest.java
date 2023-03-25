@@ -17,7 +17,7 @@ public class DocumentTest {
             doc.getKeywords().add("key1");
             doc.getKeywords().add("key2");
             Document newDoc = OKMDocument.getInstance().create(null, doc, is);
-            System.out.println(doc.title() + " vs " +newDoc.title());
+            System.out.println(doc.equals(newDoc));
         }catch (Exception e) {
             e.printStackTrace();
         }

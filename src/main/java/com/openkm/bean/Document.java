@@ -11,6 +11,10 @@ public record Document (
         node.setPath(path);
     }
 
+    public String getPath() {
+        return node.getPath();
+    }
+
     public Set<String> getKeywords() {
         return node.getKeywords();
     }
