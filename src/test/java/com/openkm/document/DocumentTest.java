@@ -12,12 +12,12 @@ public class DocumentTest {
 
         try {
             is = new FileInputStream("D:\\test.txt");
-            Document doc = new Document("test document");
+            Document doc = new Document("test document123");
             doc.setPath("/okm:root/test.txt");
             doc.getKeywords().add("key1");
             doc.getKeywords().add("key2");
-            doc = OKMDocument.getInstance().create(null, doc, is);
-            System.out.println(doc);
+            Document newDoc = OKMDocument.getInstance().create(null, doc, is);
+            System.out.println(doc.title() + " vs " +newDoc.title());
         }catch (Exception e) {
             e.printStackTrace();
         }

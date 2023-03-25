@@ -17,10 +17,10 @@ public record Document (
 
     @Override
     public String toString(){
-        return "Document{" +
-                "title='" + title + '\'' +
-                ", path='" + node.getPath() + '\'' +
-                ", keywords=" + node.getKeywords() +
-                '}';
+        String serializedEntity = """
+                Document{title='%s', path='%s', keywords=%s}
+                """;
+
+        return String.format(serializedEntity, title, node.getPath(), node.getKeywords());
     }
 }
