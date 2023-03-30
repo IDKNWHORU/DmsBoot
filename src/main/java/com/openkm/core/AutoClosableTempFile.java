@@ -7,8 +7,8 @@ public class AutoClosableTempFile implements AutoCloseable {
 
     private final File file;
 
-    public AutoClosableTempFile() throws IOException {
-        file = File.createTempFile("okm", ".tmp");
+    public AutoClosableTempFile(String prefix, String suffix) throws IOException {
+        file = File.createTempFile(prefix, suffix);
     }
 
     public File getFile() {

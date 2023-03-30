@@ -27,8 +27,7 @@ public class FileUploadController {
 
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException {
         log.debug("doPost({})", request);
-
-        try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile();
+        try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile("okm", ".tmp");
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
@@ -82,14 +81,14 @@ public class FileUploadController {
                                 }
 
                                 doc.setPath(path + "/" + fileName);
-                                File tmpPdf = File.createTempFile("okm", ".pdf");
-                                IOUtils.copy(is, fos);
-                                converter.docToPdf(tempFileWrapper.getFile(), mimeType, tmpPdf);
-                                InputStream isPdf = new FileInputStream(tmpPdf);
-                                doc = OKMDocument.getInstance().create(null, doc, isPdf);
-                                // response set path
-                                String uploadedUuid = doc.getUuid();
-                                tmpPdf.delete();
+                                try (AutoClosableTempFile tmpPdf = new AutoClosableTempFile("okm", ".pdf")) {
+                                    IOUtils.copy(is, fos);
+                                    converter.docToPdf(tempFileWrapper.getFile(), mimeType, tmpPdf.getFile());
+                                    InputStream isPdf = new FileInputStream(tmpPdf.getFile());
+                                    doc = OKMDocument.getInstance().create(null, doc, isPdf);
+                                    // response set path
+                                    String uploadedUuid = doc.getUuid();
+                                }
                             } else {
                                 throw new Exception("Not convertible to pdf");
                             }
@@ -110,7 +109,6 @@ public class FileUploadController {
                         || action == UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE) {
                     String path = request.getAttribute("path").toString();
                     String data = request.getAttribute("data").toString();
-                    log.debug("decoded data: {}", new String(Base64.getDecoder().decode(data)));
                     bos.write(Base64.getDecoder().decode(data));
                     bos.flush();
                     fos.flush();
