@@ -34,16 +34,17 @@ public class FileUploadController {
                 fos.flush();
 
                 switch (action) {
-                    case UIFileUploadAction.DIGITAL_SIGNATURE_INSERT:
+                    case UIFileUploadAction.DIGITAL_SIGNATURE_INSERT -> {
                         Document newDoc = new Document("");
                         String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
                         newDoc.setPath(newPath);
                         newDoc = OKMDocument.getInstance().create(null, newDoc, fis);
 
                         log.debug("newDoc: {}, {}", newPath, newDoc);
-                        break;
-                    case UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE:
-                        break;
+                    }
+                    case UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE -> {
+
+                    }
                 }
             }
         } catch (Exception e) {
