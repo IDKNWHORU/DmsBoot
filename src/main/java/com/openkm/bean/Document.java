@@ -27,4 +27,8 @@ public record Document (
 
         return String.format(serializedEntity, title, node.getPath(), node.getKeywords());
     }
+
+    public String getUuid() {
+        return "";
+    }
 }

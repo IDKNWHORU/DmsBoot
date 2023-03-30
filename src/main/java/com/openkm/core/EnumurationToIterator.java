@@ -1,9 +1,9 @@
-package com.openkm.util;
+package com.openkm.core;
 
 import java.util.Iterator;
 import java.util.Enumeration;
 
-public class EnumurationToIterator<E> implements Iterator {
+public class EnumurationToIterator<E> implements Iterator<E> {
     private Enumeration<E> enumeration;
 
     public EnumurationToIterator(Enumeration enumeration) {
