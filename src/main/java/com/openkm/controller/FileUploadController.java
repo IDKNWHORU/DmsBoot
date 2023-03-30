@@ -2,15 +2,14 @@ package com.openkm.controller;
 
 import com.openkm.api.OKMDocument;
 import com.openkm.bean.Document;
+import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.AutoClosableTempFile;
 import com.openkm.core.EnumurationToIterator;
 import com.openkm.core.MimeTypeConfig;
 import com.openkm.frontend.UIFileUploadAction;
-import com.openkm.util.DocConverter;
 import com.openkm.util.FilenameUtil;
 import com.openkm.util.FormatUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 
@@ -27,6 +27,8 @@ public class FileUploadController {
 
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException {
         log.debug("doPost({})", request);
+
+        FileUploadResponse fuResponse = new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false, false, false, false, "", "");
         try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile("okm", ".tmp");
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -43,9 +45,9 @@ public class FileUploadController {
                     String paramName = it.next();
                     String paramValue = multipartRequest.getParameter(paramName);
 
-                    if(paramName.equals("path")) {
+                    if (paramName.equals("path")) {
                         path = paramValue;
-                    } else if(paramName.equals("action")) {
+                    } else if (paramName.equals("action")) {
                         action = Integer.parseInt(paramValue);
                     }
                 }
@@ -54,53 +56,29 @@ public class FileUploadController {
                 InputStream is = null;
                 long size = 0;
                 if (file != null) {
-                     fileName = file.getOriginalFilename();
-                     is = file.getInputStream();
-                     size = file.getSize();
+                    fileName = file.getOriginalFilename();
+                    is = file.getInputStream();
+                    size = file.getSize();
                 }
 
                 log.debug("Filename: '{}'", fileName);
                 // rename file to avoid problems with special characters
 
                 if (action == UIFileUploadAction.INSERT) {
-                    if(fileName != null & !fileName.isEmpty()) {
+                    if (fileName != null & !fileName.isEmpty()) {
                         fileName = FilenameUtil.getName(fileName);
                         log.debug("Upload file '{}' into '{} ({})'", fileName, path, FormatUtil.formatSize(size));
                         String mimeType = MimeTypeConfig.MIME_TYPES.getContentType(fileName.toLowerCase());
                         Document doc = new Document("");
                         doc.setPath(path + "/" + fileName);
 
-                        if(!mimeType.equals(MimeTypeConfig.MIME_PDF)) {
-                            DocConverter converter = DocConverter.getInstance();
-
-                            if(converter.convertibleToPdf(mimeType)) {
-                                if(fileName.contains(".")) {
-                                    fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".pdf";
-                                } else {
-                                    fileName = fileName + ".pdf";
-                                }
-
-                                doc.setPath(path + "/" + fileName);
-                                try (AutoClosableTempFile tmpPdf = new AutoClosableTempFile("okm", ".pdf")) {
-                                    IOUtils.copy(is, fos);
-                                    converter.docToPdf(tempFileWrapper.getFile(), mimeType, tmpPdf.getFile());
-                                    InputStream isPdf = new FileInputStream(tmpPdf.getFile());
-                                    doc = OKMDocument.getInstance().create(null, doc, isPdf);
-                                    // response set path
-                                    String uploadedUuid = doc.getUuid();
-                                }
-                            } else {
-                                throw new Exception("Not convertible to pdf");
-                            }
-                        } else {
-//                            log.debug("Wizard: {}", fuResponse);
-//                            doc = new DbDocumentModule create
-                            // fuResponse setPath
-                            String UploadedUuid = doc.getUuid();
-//                            log.debug("Wizard: {}", fuResponse);
-                        }
+//                      log.debug("Wizard: {}", fuResponse);
+//                      doc = new DbDocumentModule create
+                        // fuResponse setPath
+                        String UploadedUuid = doc.getUuid();
+//                      log.debug("Wizard: {}", fuResponse);
                     }
-                } else if(action == UIFileUploadAction.UPDATE) {
+                } else if (action == UIFileUploadAction.UPDATE) {
                     log.debug("File updated: {}", path);
                 }
             } else {
