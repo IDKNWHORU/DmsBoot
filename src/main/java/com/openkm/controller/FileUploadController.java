@@ -4,20 +4,23 @@ import com.openkm.api.OKMDocument;
 import com.openkm.bean.AutoClosableTempFile;
 import com.openkm.bean.Document;
 import com.openkm.frontend.UIFileUploadAction;
-import com.openkm.frontend.UIFileUploadConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Base64;
-import java.util.Map;
 
 
 public class FileUploadController {
     private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
-    public void post(Map<String, Object> request, String response) throws IOException {
-        log.debug("doPost({}, {})", request, response);
+    public ResponseEntity<String> post(HttpServletRequest request) throws IOException {
+        log.debug("doPost({}, {})", request);
         int action = 3;
 
         try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile();
@@ -27,8 +30,8 @@ public class FileUploadController {
 
             if (action == UIFileUploadAction.DIGITAL_SIGNATURE_INSERT
                     || action == UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE) {
-                String path = request.get("path").toString();
-                String data = request.get("data").toString();
+                String path = request.getAttribute("path").toString();
+                String data = request.getAttribute("data").toString();
                 bos.write(Base64.getDecoder().decode(data));
                 bos.flush();
                 fos.flush();
@@ -50,5 +53,7 @@ public class FileUploadController {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+
+        return ResponseEntity.ok("upload success");
     }
 }
