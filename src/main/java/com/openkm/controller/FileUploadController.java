@@ -3,6 +3,8 @@ package com.openkm.controller;
 import com.openkm.api.OKMDocument;
 import com.openkm.bean.AutoClosableTempFile;
 import com.openkm.bean.Document;
+import com.openkm.frontend.UIFileUploadAction;
+import com.openkm.frontend.UIFileUploadConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,8 @@ public class FileUploadController {
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
 
-            if(action == 3 || action == 4) {
+            if (action == UIFileUploadAction.DIGITAL_SIGNATURE_INSERT
+                    || action == UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE) {
                 String path = request.get("path").toString();
                 String data = request.get("data").toString();
                 bos.write(Base64.getDecoder().decode(data));
@@ -31,15 +34,15 @@ public class FileUploadController {
                 fos.flush();
 
                 switch (action) {
-                    case 3:
+                    case UIFileUploadAction.DIGITAL_SIGNATURE_INSERT:
                         Document newDoc = new Document("");
-                        String newPath = path.substring(0, path.lastIndexOf(".") +1) + "pdf";
+                        String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
                         newDoc.setPath(newPath);
                         newDoc = OKMDocument.getInstance().create(null, newDoc, fis);
 
                         log.debug("newDoc: {}, {}", newPath, newDoc);
                         break;
-                    case 4:
+                    case UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE:
                         break;
                 }
             }
