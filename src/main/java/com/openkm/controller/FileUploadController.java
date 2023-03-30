@@ -4,15 +4,15 @@ import com.openkm.api.OKMDocument;
 import com.openkm.bean.AutoClosableTempFile;
 import com.openkm.bean.Document;
 import com.openkm.frontend.UIFileUploadAction;
+import com.openkm.util.EnumurationToIterator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Base64;
 
 
@@ -20,33 +20,57 @@ public class FileUploadController {
     private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException {
-        log.debug("doPost({}, {})", request);
-        int action = 3;
+        log.debug("doPost({})", request);
 
         try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile();
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
 
-            if (action == UIFileUploadAction.DIGITAL_SIGNATURE_INSERT
-                    || action == UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE) {
-                String path = request.getAttribute("path").toString();
-                String data = request.getAttribute("data").toString();
-                bos.write(Base64.getDecoder().decode(data));
-                bos.flush();
-                fos.flush();
+            if (request instanceof MultipartHttpServletRequest multipartRequest) {
+                MultipartFile file = multipartRequest.getFile("file");
+                String path = null;
+                int action = 0;
 
-                switch (action) {
-                    case UIFileUploadAction.DIGITAL_SIGNATURE_INSERT -> {
-                        Document newDoc = new Document("");
-                        String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
-                        newDoc.setPath(newPath);
-                        newDoc = OKMDocument.getInstance().create(null, newDoc, fis);
+                for (EnumurationToIterator<String> it = new EnumurationToIterator<>(multipartRequest.getParameterNames()); it.hasNext(); ) {
+                    String paramName = it.next();
+                    String paramValue = multipartRequest.getParameter(paramName);
 
-                        log.debug("newDoc: {}, {}", newPath, newDoc);
+                    if(paramName.equals("path")) {
+                        path = paramValue;
+                    } else if(paramName.equals("action")) {
+                        action = Integer.parseInt(paramValue);
                     }
-                    case UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE -> {
+                }
 
+                if (file != null) {
+                    String fileName = file.getOriginalFilename();
+                    InputStream is = file.getInputStream();
+                    long size = file.getSize();
+                }
+            } else {
+                int action = request.getParameter("action") != null ? Integer.parseInt(request.getParameter("action")) : -1;
+                if (action == UIFileUploadAction.DIGITAL_SIGNATURE_INSERT
+                        || action == UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE) {
+                    String path = request.getAttribute("path").toString();
+                    String data = request.getAttribute("data").toString();
+                    log.debug("decoded data: {}", new String(Base64.getDecoder().decode(data)));
+                    bos.write(Base64.getDecoder().decode(data));
+                    bos.flush();
+                    fos.flush();
+
+                    switch (action) {
+                        case UIFileUploadAction.DIGITAL_SIGNATURE_INSERT -> {
+                            Document newDoc = new Document("");
+                            String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
+                            newDoc.setPath(newPath);
+                            newDoc = OKMDocument.getInstance().create(null, newDoc, fis);
+
+                            log.debug("newDoc: {}, {}", newPath, newDoc);
+                        }
+                        case UIFileUploadAction.DIGITAL_SIGNATURE_UPDATE -> {
+
+                        }
                     }
                 }
             }
