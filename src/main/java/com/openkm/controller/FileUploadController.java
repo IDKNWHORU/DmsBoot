@@ -4,6 +4,7 @@ import com.openkm.api.OKMDocument;
 import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.AutoClosableTempFile;
+import com.openkm.core.FileSizeExceededException;
 import com.openkm.core.MimeTypeConfig;
 import com.openkm.frontend.UIFileUploadAction;
 import com.openkm.module.DocumentModule;
@@ -25,7 +26,7 @@ import java.util.Optional;
 public class FileUploadController {
     private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
-    public ResponseEntity<String> post(HttpServletRequest request) throws IOException {
+    public ResponseEntity<String> post(HttpServletRequest request) throws IOException, FileSizeExceededException {
         log.debug("doPost({})", request);
 
         FileUploadResponse fuResponse = new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false, false, false, false, "", "");
@@ -39,7 +40,7 @@ public class FileUploadController {
                 String path = null;
                 int action = 0;
 
-                for(String paramName: multipartRequest.getParameterMap().keySet()) {
+                for (String paramName : multipartRequest.getParameterMap().keySet()) {
                     String paramValue = multipartRequest.getParameter(paramName);
 
                     switch (paramName) {
@@ -64,12 +65,12 @@ public class FileUploadController {
                     if (Optional.ofNullable(fileName).orElse("").isBlank()) {
                         fileName = FilenameUtil.getName(fileName);
                         log.debug("Upload file '{}' into '{} ({})'", fileName, path, FormatUtil.formatSize(size));
-                        String mimeType = MimeTypeConfig.MIME_TYPES.getContentType(fileName.toLowerCase());
+                        String mimeType = MimeTypeConfig.mimeTypes.getContentType(fileName.toLowerCase());
                         Document doc = new Document("");
                         doc.setPath(path + "/" + fileName);
 
-                      log.debug("Wizard: {}", fuResponse);
-                      doc = new DocumentModule().create(null, doc, is, size, null, fuResponse);
+                        log.debug("Wizard: {}", fuResponse);
+                        doc = new DocumentModule().create(null, doc, is, size, null, fuResponse);
                         // fuResponse setPath
                         String UploadedUuid = doc.getUuid();
 //                      log.debug("Wizard: {}", fuResponse);
