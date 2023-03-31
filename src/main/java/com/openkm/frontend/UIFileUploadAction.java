@@ -1,10 +1,10 @@
 package com.openkm.frontend;
 
-public interface UIFileUploadAction {
-    int NODE = -1;
-    int INSERT = 0;
-    int UPDATE = 1;
-    int FOLDER = 2;
-    int DIGITAL_SIGNATURE_INSERT = 3;
-    int DIGITAL_SIGNATURE_UPDATE = 4;
+public class UIFileUploadAction {
+    public final static int NODE = -1;
+    public final static int INSERT = 0;
+    public final static int UPDATE = 1;
+    public final static int FOLDER = 2;
+    public final static int DIGITAL_SIGNATURE_INSERT = 3;
+    public final static int DIGITAL_SIGNATURE_UPDATE = 4;
 }

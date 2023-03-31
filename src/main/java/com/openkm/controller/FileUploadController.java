@@ -4,9 +4,9 @@ import com.openkm.api.OKMDocument;
 import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.AutoClosableTempFile;
-import com.openkm.core.EnumurationToIterator;
 import com.openkm.core.MimeTypeConfig;
 import com.openkm.frontend.UIFileUploadAction;
+import com.openkm.module.DocumentModule;
 import com.openkm.util.FilenameUtil;
 import com.openkm.util.FormatUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Iterator;
+import java.util.Optional;
 
 
 public class FileUploadController {
@@ -39,16 +39,12 @@ public class FileUploadController {
                 String path = null;
                 int action = 0;
 
-                Iterator<String> it = new EnumurationToIterator<>(multipartRequest.getParameterNames());
-
-                while (it.hasNext()) {
-                    String paramName = it.next();
+                for(String paramName: multipartRequest.getParameterMap().keySet()) {
                     String paramValue = multipartRequest.getParameter(paramName);
 
-                    if (paramName.equals("path")) {
-                        path = paramValue;
-                    } else if (paramName.equals("action")) {
-                        action = Integer.parseInt(paramValue);
+                    switch (paramName) {
+                        case "path" -> path = paramValue;
+                        case "action" -> action = Integer.parseInt(paramValue);
                     }
                 }
 
@@ -65,15 +61,15 @@ public class FileUploadController {
                 // rename file to avoid problems with special characters
 
                 if (action == UIFileUploadAction.INSERT) {
-                    if (fileName != null & !fileName.isEmpty()) {
+                    if (Optional.ofNullable(fileName).orElse("").isBlank()) {
                         fileName = FilenameUtil.getName(fileName);
                         log.debug("Upload file '{}' into '{} ({})'", fileName, path, FormatUtil.formatSize(size));
                         String mimeType = MimeTypeConfig.MIME_TYPES.getContentType(fileName.toLowerCase());
                         Document doc = new Document("");
                         doc.setPath(path + "/" + fileName);
 
-//                      log.debug("Wizard: {}", fuResponse);
-//                      doc = new DbDocumentModule create
+                      log.debug("Wizard: {}", fuResponse);
+                      doc = new DocumentModule().create(null, doc, is, size, null, fuResponse);
                         // fuResponse setPath
                         String UploadedUuid = doc.getUuid();
 //                      log.debug("Wizard: {}", fuResponse);
