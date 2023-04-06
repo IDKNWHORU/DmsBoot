@@ -4,26 +4,20 @@ import com.openkm.api.OKMDocument;
 import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.FileSizeExceededException;
-import com.openkm.core.MimeTypeConfig;
-import com.openkm.repository.NodeBaseRepository;
-import com.openkm.frontend.UIFileUploadAction;
-import com.openkm.module.DocumentModule;
 import com.openkm.util.AutoClosableTempFile;
-import com.openkm.util.FilenameUtil;
-import com.openkm.util.FormatUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Optional;
 
 @RestController
 public class FileUploadController {
@@ -38,7 +32,7 @@ public class FileUploadController {
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
-            
+
             String path = request.getAttribute("path").toString();
             String data = request.getAttribute("data").toString();
             bos.write(Base64.getDecoder().decode(data));
