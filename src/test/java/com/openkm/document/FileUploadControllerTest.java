@@ -14,7 +14,6 @@ public class FileUploadControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setAttribute("path", "okm:root");
         request.setAttribute("data", "aGVsbG8gd29ybGQ=");
-        request.addParameter("action", "3");
 
         try {
             log.debug("Response is {}", fc.post(request));
