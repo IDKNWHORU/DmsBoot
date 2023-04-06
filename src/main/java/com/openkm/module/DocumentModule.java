@@ -114,8 +114,9 @@ public class DocumentModule {
                 fos.flush();
                 is.close();
 
-                UUID parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
-                Optional<NodeBase> parentNode = nodeBaseRepository.findById(parentUuid);
+//                String parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
+//                Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.fromString(parentUuid));
+                Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.randomUUID());
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
                 Optional<Calendar> created = Optional.ofNullable(Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance()));
