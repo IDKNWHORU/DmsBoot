@@ -52,6 +52,7 @@ public class BaseDocumentModule {
         }
 
         NodeDocument newDoc = NodeDocument.builder()
+                .uuid(nodeDocumentDTO.uuid())
                 .context(nodeDocumentDTO.context())
                 .parent(nodeDocumentDTO.parent().getUuid())
                 .author(nodeDocumentDTO.author())

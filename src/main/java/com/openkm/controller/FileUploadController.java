@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -23,10 +25,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Optional;
 
-
+@RestController
 public class FileUploadController {
     private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
+    @PostMapping("/FileUpload")
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException, FileSizeExceededException {
         log.debug("doPost({})", request);
 
