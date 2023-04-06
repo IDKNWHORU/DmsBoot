@@ -114,7 +114,7 @@ public class DocumentModule {
                 fos.flush();
                 is.close();
 
-                String parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
+                String parentUuid = nodeBaseRepository.getUuidFromPath(Config.ROOT_NODE_UUID, parentPath);
                 Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.fromString(parentUuid));
                 log.debug("parent uuid is {}", parentUuid);
 //                Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.randomUUID());

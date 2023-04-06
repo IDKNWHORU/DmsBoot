@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface NodeBaseRepository extends CrudRepository<NodeBase, UUID> {
 
-    @Query("select n.uuid from NodeBase n where n.path = ?1")
-    public String getUuidFromPath(String path) throws PathNotFoundException, DatabaseException;
+    @Query("select nb.uuid from NodeBase nb where nb.parent = ?1 and nb.name = ?2")
+    public String getUuidFromPath(UUID uuid, String name) throws PathNotFoundException, DatabaseException;
 }
