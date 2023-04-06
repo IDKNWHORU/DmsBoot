@@ -1,24 +1,3 @@
-/**
- * OpenKM, Open Document Management System (http://www.openkm.com)
- * Copyright (c) 2006-2017 Paco Avila & Josep Llort
- * <p>
- * No bytes were intentionally harmed during the development of this application.
- * <p>
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * <p>
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
 package com.openkm.module;
 
 import com.openkm.bean.Document;
@@ -28,6 +7,7 @@ import com.openkm.bean.NodeDocument;
 import com.openkm.core.*;
 import com.openkm.dao.MimeTypeDAO;
 import com.openkm.dao.NodeBaseDAO;
+import com.openkm.util.AutoClosableTempFile;
 import com.openkm.util.FormatUtil;
 import com.openkm.util.PathUtils;
 import com.openkm.util.SystemProfiling;
@@ -130,10 +110,8 @@ public class DocumentModule {
                 fos.flush();
                 is.close();
 
-                NodeBaseDAO nodeBaseDAO = new NodeBaseDAO();
-
-                String parentUuid = nodeBaseDAO.getUuidFromPath(parentPath);
-                NodeBase parentNode = nodeBaseDAO.findByPK(parentUuid);
+                String parentUuid = NodeBaseDAO.INSTANCE.getUuidFromPath(parentPath);
+                NodeBase parentNode = NodeBaseDAO.INSTANCE.findByPK(parentUuid);
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
                 NodeDocument docNode = BaseDocumentModule.create(null, parentPath, parentNode, name, doc.title(),
