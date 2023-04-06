@@ -1,4 +1,4 @@
-package com.openkm.core;
+package com.openkm.util;
 
 import java.io.File;
 import java.io.IOException;

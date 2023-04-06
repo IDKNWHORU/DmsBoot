@@ -1,6 +1,7 @@
 package com.openkm.document;
 
 import com.openkm.controller.FileUploadController;
+import com.openkm.core.FileSizeExceededException;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class FileUploadControllerTest {
@@ -14,7 +15,7 @@ public class FileUploadControllerTest {
 
         try {
             System.out.println(fc.post(request));
-        } catch (Exception e) {
+        } catch (Exception | FileSizeExceededException e) {
             e.printStackTrace();
         }
 
