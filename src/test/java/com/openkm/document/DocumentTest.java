@@ -16,9 +16,9 @@ public class DocumentTest {
             doc.setPath("/okm:root/test.txt");
             doc.getKeywords().add("key1");
             doc.getKeywords().add("key2");
-            Document newDoc = OKMDocument.getInstance().create(null, doc, is);
+            Document newDoc = OKMDocument.INSTANCE.create(null, doc, is);
             System.out.println(doc.equals(newDoc));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

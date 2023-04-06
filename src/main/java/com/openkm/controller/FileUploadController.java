@@ -93,7 +93,7 @@ public class FileUploadController {
                             Document newDoc = new Document("");
                             String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
                             newDoc.setPath(newPath);
-                            newDoc = OKMDocument.getInstance().create(null, newDoc, fis);
+                            newDoc = OKMDocument.INSTANCE.create(null, newDoc, fis);
 
                             log.debug("newDoc: {}, {}", newPath, newDoc);
                         }

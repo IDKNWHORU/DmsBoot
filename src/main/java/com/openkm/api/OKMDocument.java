@@ -8,13 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
-public class OKMDocument {
+public enum OKMDocument {
+    INSTANCE;
     private static final Logger log = LoggerFactory.getLogger(OKMDocument.class);
-    private static final OKMDocument instance = new OKMDocument();
-
-    public static OKMDocument getInstance() {
-        return instance;
-    }
 
     private OKMDocument() {
     }
