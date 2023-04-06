@@ -22,12 +22,14 @@ public class BaseDocumentModule {
     }
 
     public static NodeDocument create(String title) {
-        return new NodeDocument(UUID.randomUUID().toString(), title);
+        return new NodeDocument(UUID.randomUUID().toString(), null, null, null, null, title, null, null, null);
     }
 
     public static <E> NodeDocument create(String user, String parentPath, NodeBase parentNode, String name, String title, Calendar created,
                                           String mimeType, InputStream is, long size, Set<String> keywords, HashSet<E> categories, HashSet<E> propertyGroups,
                                           ArrayList<E> notes, Object o1, FileUploadResponse fuResponse) {
-        return new NodeDocument(UUID.randomUUID().toString(), title);
+
+
+        return new NodeDocument(UUID.randomUUID().toString(), parentNode.getContext(), parentNode.getUuid(), user, name, title, mimeType, Calendar.getInstance(), Calendar.getInstance());
     }
 }

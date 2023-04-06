@@ -5,6 +5,8 @@ import com.openkm.core.DatabaseException;
 import com.openkm.core.PathNotFoundException;
 import org.springframework.data.repository.CrudRepository;
 
-public interface NodeBaseRepository extends CrudRepository<NodeBase, String> {
-    public String getUuidFromPath(String path) throws PathNotFoundException, DatabaseException;
+import java.util.UUID;
+
+public interface NodeBaseRepository extends CrudRepository<NodeBase, UUID> {
+    public UUID getUuidFromPath(String path) throws PathNotFoundException, DatabaseException;
 }

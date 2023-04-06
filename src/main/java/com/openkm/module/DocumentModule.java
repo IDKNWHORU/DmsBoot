@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class DocumentModule {
     private static final Logger log = LoggerFactory.getLogger(DocumentModule.class);
@@ -117,7 +114,7 @@ public class DocumentModule {
                 fos.flush();
                 is.close();
 
-                String parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
+                UUID parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
                 Optional<NodeBase> parentNode = nodeBaseRepository.findById(parentUuid);
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
