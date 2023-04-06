@@ -1,4 +1,4 @@
-package com.openkm.dao;
+package com.openkm.repository;
 
 public class MimeTypeDAO {
     public static Object findByName(String mimeType) {

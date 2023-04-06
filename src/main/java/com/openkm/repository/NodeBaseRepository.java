@@ -1,4 +1,4 @@
-package com.openkm.dao;
+package com.openkm.repository;
 
 import com.openkm.bean.NodeBase;
 import com.openkm.core.DatabaseException;

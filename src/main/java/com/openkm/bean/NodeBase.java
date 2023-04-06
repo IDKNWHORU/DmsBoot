@@ -11,4 +11,8 @@ public class NodeBase {
     public UUID getUuid() {
         return UUID.randomUUID();
     }
+
+    public String getPath() {
+        return "";
+    }
 }

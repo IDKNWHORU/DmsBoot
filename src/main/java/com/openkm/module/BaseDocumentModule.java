@@ -1,9 +1,10 @@
 package com.openkm.module;
 
-import com.openkm.bean.Document;
-import com.openkm.bean.FileUploadResponse;
-import com.openkm.bean.NodeBase;
-import com.openkm.bean.NodeDocument;
+import com.openkm.bean.*;
+import com.openkm.core.Config;
+import com.openkm.dto.NodeDocumentDTO;
+import com.openkm.repository.NodeDocumentRepository;
+import com.openkm.repository.NodeDocumentVersionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +13,15 @@ import java.util.*;
 
 public class BaseDocumentModule {
     private static final Logger log = LoggerFactory.getLogger(BaseDocumentModule.class);
+    private final NodeDocumentRepository nodeDocumentRepository;
+    private final NodeDocumentVersionRepository nodeDocumentVersionRepository;
 
-    public static Document getProperties(String user, NodeDocument nodeDocument) {
+    public BaseDocumentModule(NodeDocumentRepository nodeDocumentRepository, NodeDocumentVersionRepository nodeDocumentVersionRepository) {
+        this.nodeDocumentRepository = nodeDocumentRepository;
+        this.nodeDocumentVersionRepository = nodeDocumentVersionRepository;
+    }
+
+    public static Document getProperties(String user, NodeDocumentDTO nodeDocument) {
         log.debug("getProperties({}, {})", user, nodeDocument);
         long begin = System.currentTimeMillis();
         Document document = new Document(nodeDocument.title());
@@ -21,15 +29,47 @@ public class BaseDocumentModule {
         return document;
     }
 
-    public static NodeDocument create(String title) {
-        return new NodeDocument(UUID.randomUUID().toString(), null, null, null, null, title, null, null, null);
+    public static NodeDocumentDTO create(String title) {
+        return new NodeDocumentDTO(UUID.randomUUID(),
+                null,
+                null,
+                null,
+                null,
+                title,
+                null,
+                null,
+                null,
+                null);
     }
 
-    public static <E> NodeDocument create(String user, String parentPath, NodeBase parentNode, String name, String title, Calendar created,
-                                          String mimeType, InputStream is, long size, Set<String> keywords, HashSet<E> categories, HashSet<E> propertyGroups,
-                                          ArrayList<E> notes, Object o1, FileUploadResponse fuResponse) {
+    public <E> NodeDocumentDTO create(NodeDocumentDTO nodeDocumentDTO,
+                                      InputStream is, long size, Set<String> keywords, HashSet<E> categories, HashSet<E> propertyGroups,
+                                      ArrayList<E> notes, Object o1, FileUploadResponse fuResponse) {
+        String path = "";
 
+        if (Config.STORE_NODE_PATH) {
+            path = "%s/%s".formatted(nodeDocumentDTO.parent().getPath(), nodeDocumentDTO.name());
+        }
 
-        return new NodeDocument(UUID.randomUUID().toString(), parentNode.getContext(), parentNode.getUuid(), user, name, title, mimeType, Calendar.getInstance(), Calendar.getInstance());
+        NodeDocument newDoc = NodeDocument.builder()
+                .context(nodeDocumentDTO.context())
+                .parent(nodeDocumentDTO.parent().getUuid())
+                .author(nodeDocumentDTO.author())
+                .name(nodeDocumentDTO.name())
+                .title(nodeDocumentDTO.title())
+                .mimeType(nodeDocumentDTO.mimeType())
+                .created(nodeDocumentDTO.created())
+                .lastModified(nodeDocumentDTO.lastModified())
+                .path(path)
+                .build();
+
+        log.debug("newDoc uuid is {}", newDoc.getUuid());
+
+        NodeDocumentVersion newDocVer = new NodeDocumentVersion();
+
+        this.nodeDocumentRepository.save(newDoc);
+        this.nodeDocumentVersionRepository.save(newDocVer);
+
+        return nodeDocumentDTO;
     }
 }

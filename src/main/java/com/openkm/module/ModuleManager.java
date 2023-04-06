@@ -1,6 +1,6 @@
 package com.openkm.module;
 
-import com.openkm.dao.NodeBaseRepository;
+import com.openkm.repository.NodeBaseRepository;
 
 public class ModuleManager {
     private static DocumentModule documentModule;

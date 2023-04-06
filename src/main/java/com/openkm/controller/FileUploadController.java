@@ -5,7 +5,7 @@ import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.FileSizeExceededException;
 import com.openkm.core.MimeTypeConfig;
-import com.openkm.dao.NodeBaseRepository;
+import com.openkm.repository.NodeBaseRepository;
 import com.openkm.frontend.UIFileUploadAction;
 import com.openkm.module.DocumentModule;
 import com.openkm.util.AutoClosableTempFile;

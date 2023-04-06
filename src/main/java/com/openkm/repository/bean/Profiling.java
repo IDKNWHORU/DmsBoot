@@ -1,4 +1,4 @@
-package com.openkm.dao.bean;
+package com.openkm.repository.bean;
 
 import java.util.Calendar;
 

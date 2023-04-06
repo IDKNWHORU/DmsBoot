@@ -3,10 +3,10 @@ package com.openkm.module;
 import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.bean.NodeBase;
-import com.openkm.bean.NodeDocument;
+import com.openkm.dto.NodeDocumentDTO;
 import com.openkm.core.*;
-import com.openkm.dao.MimeTypeDAO;
-import com.openkm.dao.NodeBaseRepository;
+import com.openkm.repository.MimeTypeDAO;
+import com.openkm.repository.NodeBaseRepository;
 import com.openkm.util.AutoClosableTempFile;
 import com.openkm.util.FormatUtil;
 import com.openkm.util.PathUtils;
@@ -33,7 +33,7 @@ public class DocumentModule {
         log.debug("create({}, {}, {})", token, doc, is);
         long begin = System.currentTimeMillis();
         Document newDocument = null;
-        NodeDocument docNode = BaseDocumentModule.create(doc.title());
+        NodeDocumentDTO docNode = BaseDocumentModule.create(doc.title());
 
         newDocument = BaseDocumentModule.getProperties("", docNode);
 
@@ -118,9 +118,29 @@ public class DocumentModule {
                 Optional<NodeBase> parentNode = nodeBaseRepository.findById(parentUuid);
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
-                NodeDocument docNode = BaseDocumentModule.create(null, parentPath, parentNode.get(), name, doc.title(),
-                        doc.getCreated(), mimeType, is, size, keywords, new HashSet<>(), new HashSet<>(), new ArrayList<>(),
-                        null, fuResponse);
+                Optional<Calendar> created = Optional.ofNullable(Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance()));
+                NodeDocumentDTO newDocumentRequest = new NodeDocumentDTO(
+                        null,
+                        parentPath,
+                        parentNode.get(),
+                        null,
+                        name,
+                        doc.title(),
+                        mimeType,
+                        created.get(),
+                        created.get(),
+                        "");
+
+                NodeDocumentDTO docNode = new BaseDocumentModule(null, null)
+                        .create(newDocumentRequest,
+                                is,
+                                size,
+                                keywords,
+                                new HashSet<>(),
+                                new HashSet<>(),
+                                new ArrayList<>(),
+                                null,
+                                fuResponse);
 
                 newDocument = BaseDocumentModule.getProperties("", docNode);
 

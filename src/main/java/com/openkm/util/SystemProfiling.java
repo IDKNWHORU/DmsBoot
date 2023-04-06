@@ -1,8 +1,8 @@
 package com.openkm.util;
 
 import com.openkm.core.Config;
-import com.openkm.dao.ProfilingDAO;
-import com.openkm.dao.bean.Profiling;
+import com.openkm.repository.ProfilingDAO;
+import com.openkm.repository.bean.Profiling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
