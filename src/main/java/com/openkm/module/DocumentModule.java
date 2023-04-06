@@ -6,7 +6,7 @@ import com.openkm.bean.NodeBase;
 import com.openkm.bean.NodeDocument;
 import com.openkm.core.*;
 import com.openkm.dao.MimeTypeDAO;
-import com.openkm.dao.NodeBaseDAO;
+import com.openkm.dao.NodeBaseRepository;
 import com.openkm.util.AutoClosableTempFile;
 import com.openkm.util.FormatUtil;
 import com.openkm.util.PathUtils;
@@ -24,6 +24,13 @@ import java.util.Set;
 
 public class DocumentModule {
     private static final Logger log = LoggerFactory.getLogger(DocumentModule.class);
+
+    private final NodeBaseRepository nodeBaseRepository;
+
+    public DocumentModule(NodeBaseRepository nodeBaseRepository) {
+        this.nodeBaseRepository = nodeBaseRepository;
+    }
+
 
     public Document create(String token, Document doc, java.io.InputStream is) {
         log.debug("create({}, {}, {})", token, doc, is);
@@ -110,11 +117,11 @@ public class DocumentModule {
                 fos.flush();
                 is.close();
 
-                String parentUuid = NodeBaseDAO.INSTANCE.getUuidFromPath(parentPath);
-                NodeBase parentNode = NodeBaseDAO.INSTANCE.findByPK(parentUuid);
+                String parentUuid = nodeBaseRepository.getUuidFromPath(parentPath);
+                Optional<NodeBase> parentNode = nodeBaseRepository.findById(parentUuid);
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
-                NodeDocument docNode = BaseDocumentModule.create(null, parentPath, parentNode, name, doc.title(),
+                NodeDocument docNode = BaseDocumentModule.create(null, parentPath, parentNode.get(), name, doc.title(),
                         doc.getCreated(), mimeType, is, size, keywords, new HashSet<>(), new HashSet<>(), new ArrayList<>(),
                         null, fuResponse);
 

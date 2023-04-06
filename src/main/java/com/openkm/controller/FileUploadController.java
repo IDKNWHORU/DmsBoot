@@ -5,6 +5,7 @@ import com.openkm.bean.Document;
 import com.openkm.bean.FileUploadResponse;
 import com.openkm.core.FileSizeExceededException;
 import com.openkm.core.MimeTypeConfig;
+import com.openkm.dao.NodeBaseRepository;
 import com.openkm.frontend.UIFileUploadAction;
 import com.openkm.module.DocumentModule;
 import com.openkm.util.AutoClosableTempFile;
@@ -70,7 +71,8 @@ public class FileUploadController {
                         doc.setPath(path + "/" + fileName);
 
                         log.debug("Wizard: {}", fuResponse);
-                        doc = new DocumentModule().create(null, doc, is, size, null, fuResponse);
+                        NodeBaseRepository nodeBaseRepository = null;
+                        doc = new DocumentModule(nodeBaseRepository).create(null, doc, is, size, null, fuResponse);
                         // fuResponse setPath
                         String UploadedUuid = doc.getUuid();
 //                      log.debug("Wizard: {}", fuResponse);
