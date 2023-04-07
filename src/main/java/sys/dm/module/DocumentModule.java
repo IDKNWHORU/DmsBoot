@@ -114,14 +114,14 @@ public class DocumentModule {
 //                String parentUuid = nodeBaseRepository.getUuidFromPath(Config.ROOT_NODE_UUID, parentPath);
 //                Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.fromString(parentUuid));
 //                log.debug("parent uuid is {}", parentUuid);
-                Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.randomUUID());
+                NodeBase parentNode = nodeBaseRepository.findById(UUID.randomUUID()).orElse(new NodeBase(""));
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
                 Calendar created = Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance());
                 NodeDocumentDTO newDocumentRequest = new NodeDocumentDTO(
                         null,
                         parentPath,
-                        parentNode.orElse(new NodeBase("")),
+                        parentNode,
                         null,
                         name,
                         doc.title(),
