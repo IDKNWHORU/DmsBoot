@@ -32,12 +32,9 @@ public class DocumentModule {
     public Document create(String token, Document doc, java.io.InputStream is) {
         log.debug("create({}, {}, {})", token, doc, is);
         long begin = System.currentTimeMillis();
-        Document newDocument = null;
         NodeDocumentDTO docNode = BaseDocumentModule.create(doc.title());
 
-        newDocument = BaseDocumentModule.getProperties("", docNode);
-
-        return newDocument;
+        return BaseDocumentModule.getProperties("", docNode);
     }
 
     public Document create(String token, Document doc, InputStream is, long size, String userId, FileUploadResponse fuResponse) throws Exception, FileSizeExceededException {
@@ -124,13 +121,13 @@ public class DocumentModule {
                 NodeDocumentDTO newDocumentRequest = new NodeDocumentDTO(
                         null,
                         parentPath,
-                        parentNode.get(),
+                        parentNode.orElse(new NodeBase("")),
                         null,
                         name,
                         doc.title(),
                         mimeType,
-                        created.get(),
-                        created.get(),
+                        created.orElse(Calendar.getInstance()),
+                        created.orElse(Calendar.getInstance()),
                         "");
 
                 NodeDocumentDTO docNode = new BaseDocumentModule(null, null)
