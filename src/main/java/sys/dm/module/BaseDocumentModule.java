@@ -30,9 +30,8 @@ public class BaseDocumentModule {
     public static Document getProperties(String user, NodeDocumentDTO nodeDocument) {
         log.debug("getProperties({}, {})", user, nodeDocument);
         long begin = System.currentTimeMillis();
-        Document document = new Document(nodeDocument.title());
 
-        return document;
+        return new Document(nodeDocument.title());
     }
 
     public static NodeDocumentDTO create(String title) {

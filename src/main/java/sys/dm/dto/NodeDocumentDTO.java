@@ -17,6 +17,5 @@ public record NodeDocumentDTO(
         Calendar lastModified,
         String path
 ) {
-    private static final long serialVersionUID = 1L;
-    public static final String TEXT_FIELD = "text";
+    
 }

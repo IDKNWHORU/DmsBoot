@@ -9,7 +9,7 @@ import sys.dm.core.*;
 import sys.dm.dto.NodeDocumentDTO;
 import sys.dm.repository.MimeTypeDAO;
 import sys.dm.repository.NodeBaseRepository;
-import sys.dm.util.AutoClosableTempFile;
+import sys.dm.util.TempFile;
 import sys.dm.util.FormatUtil;
 import sys.dm.util.PathUtils;
 import sys.dm.util.SystemProfiling;
@@ -68,7 +68,7 @@ public class DocumentModule {
         int extIdx = name.lastIndexOf(".");
         String fileExtension = extIdx > 0 ? name.substring(extIdx) : ".tmp";
 
-        try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile("okm", fileExtension);
+        try (TempFile tempFileWrapper = new TempFile("okm", fileExtension);
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              InputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
             // token check

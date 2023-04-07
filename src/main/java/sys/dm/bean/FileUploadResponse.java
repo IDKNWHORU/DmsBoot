@@ -1,13 +1,11 @@
 package sys.dm.bean;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public record FileUploadResponse(List<String> groupList, List<String> workflowList, boolean showWizardCategories,
                                  boolean showWizardKeywords, boolean digitalSignature, boolean hasAutomation,
-                                 String error, String path) implements Serializable {
-    private static final long serialVersionUID = 1L;
+                                 String error, String path) {
 
     public FileUploadResponse setError(String error) {
         return new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false, false, false, false, error, "");

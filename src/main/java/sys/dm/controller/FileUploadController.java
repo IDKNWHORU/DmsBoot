@@ -4,7 +4,7 @@ import sys.dm.api.OKMDocument;
 import sys.dm.bean.Document;
 import sys.dm.bean.FileUploadResponse;
 import sys.dm.core.FileSizeExceededException;
-import sys.dm.util.AutoClosableTempFile;
+import sys.dm.util.TempFile;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class FileUploadController {
         log.debug("doPost({})", request);
 
         FileUploadResponse fuResponse = new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false, false, false, false, "", "");
-        try (AutoClosableTempFile tempFileWrapper = new AutoClosableTempFile("okm", ".tmp");
+        try (TempFile tempFileWrapper = new TempFile("okm", ".tmp");
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
