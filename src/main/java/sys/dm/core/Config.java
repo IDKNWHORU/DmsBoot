@@ -16,4 +16,8 @@ public class Config {
     public static boolean STORE_NODE_PATH = true;
 
     public static UUID ROOT_NODE_UUID = UUID.fromString("cafebabe-cafe-babe-cafe-babecafebabe");
+
+    private Config() {
+        throw new AssertionError();
+    }
 }
