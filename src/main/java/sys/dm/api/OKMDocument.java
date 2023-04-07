@@ -12,7 +12,7 @@ public enum OKMDocument {
     INSTANCE;
     private static final Logger log = LoggerFactory.getLogger(OKMDocument.class);
 
-    private OKMDocument() {
+    OKMDocument() {
     }
 
     public Document create(String token, Document doc, InputStream is) {
