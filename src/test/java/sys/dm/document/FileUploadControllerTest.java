@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 public class FileUploadControllerTest {
-    private static Logger log = LoggerFactory.getLogger(FileUploadControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(FileUploadControllerTest.class);
 
     public static void main(String... args) {
         FileUploadController fc = new FileUploadController();
