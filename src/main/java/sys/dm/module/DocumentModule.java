@@ -117,7 +117,7 @@ public class DocumentModule {
                 Optional<NodeBase> parentNode = nodeBaseRepository.findById(UUID.randomUUID());
 
                 Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
-                Optional<Calendar> created = Optional.ofNullable(Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance()));
+                Calendar created = Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance());
                 NodeDocumentDTO newDocumentRequest = new NodeDocumentDTO(
                         null,
                         parentPath,
@@ -126,8 +126,8 @@ public class DocumentModule {
                         name,
                         doc.title(),
                         mimeType,
-                        created.orElse(Calendar.getInstance()),
-                        created.orElse(Calendar.getInstance()),
+                        created,
+                        created,
                         "");
 
                 NodeDocumentDTO docNode = new BaseDocumentModule(null, null)
