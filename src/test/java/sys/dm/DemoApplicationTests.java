@@ -1,5 +1,6 @@
 package sys.dm;
 
+import org.junit.jupiter.api.BeforeAll;
 import sys.dm.bean.NodeDocument;
 import sys.dm.repository.NodeDocumentRepository;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,16 @@ import java.util.UUID;
 @SpringBootTest
 class DemoApplicationTests {
     private static final Logger log = LoggerFactory.getLogger(DemoApplicationTests.class);
-
     @Autowired
     NodeDocumentRepository nodeDocumentRepository;
+
+    @BeforeAll
+    public static void cleanup(@Autowired NodeDocumentRepository nodeDocumentRepository) {
+        NodeDocument clearDocument = NodeDocument.builder().uuid(UUID.fromString("033f1451-4d29-477a-876e-ef94dc6d606c")).build();
+        log.info("deleted document is: {}", clearDocument.toString());
+
+        nodeDocumentRepository.delete(clearDocument);
+    }
 
     @Test
     void contextLoads() {
@@ -23,9 +31,11 @@ class DemoApplicationTests {
 
     @Test
     void test() {
-        NodeDocument nodeDocument = NodeDocument.builder().uuid(UUID.randomUUID()).build();
+        NodeDocument nodeDocument = NodeDocument.builder().uuid(UUID.fromString("033f1451-4d29-477a-876e-ef94dc6d606c")).build();
 
         log.info("node document is: {}", nodeDocument.toString());
-        nodeDocumentRepository.save(nodeDocument);
+        NodeDocument savedDocument = nodeDocumentRepository.save(nodeDocument);
+
+        assert savedDocument.getUuid().equals(nodeDocument.getUuid());
     }
 }
