@@ -32,17 +32,17 @@ public class FileUploadController {
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              FileInputStream fis = new FileInputStream(tempFileWrapper.getFile())) {
 
-            String path = request.getAttribute("path").toString();
             String data = request.getAttribute("data").toString();
             bos.write(Base64.getDecoder().decode(data));
             bos.flush();
             fos.flush();
 
+            String path = request.getAttribute("path").toString();
             String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
             Document newDoc = new Document(UUID.randomUUID(), "", newPath, "jpg", new Node());
             newDoc = OKMDocument.INSTANCE.create(null, newDoc, fis);
 
-            log.debug("newDoc: {}, {}", newPath, newDoc);
+            log.debug("newPath: {}, newDoc: {}", newPath, newDoc);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
 
