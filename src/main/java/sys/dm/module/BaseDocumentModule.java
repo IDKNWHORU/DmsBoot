@@ -2,10 +2,7 @@ package sys.dm.module;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sys.dm.bean.Document;
-import sys.dm.bean.FileUploadResponse;
-import sys.dm.bean.NodeDocument;
-import sys.dm.bean.NodeDocumentVersion;
+import sys.dm.bean.*;
 import sys.dm.core.Config;
 import sys.dm.dto.NodeDocumentDTO;
 import sys.dm.repository.NodeDocumentRepository;
@@ -31,7 +28,7 @@ public class BaseDocumentModule {
         log.debug("getProperties({}, {})", user, nodeDocument);
         long begin = System.currentTimeMillis();
 
-        return new Document(nodeDocument.title());
+        return new Document(nodeDocument.uuid(), nodeDocument.title(), nodeDocument.path(), nodeDocument.mimeType(), new Node());
     }
 
     public static NodeDocumentDTO create(String title) {

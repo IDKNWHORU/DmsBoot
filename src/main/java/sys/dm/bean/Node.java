@@ -22,7 +22,8 @@ public class Node {
         return keywords;
     }
 
-    public void setKeywords(Set<String> keywords) {
-        this.keywords = keywords;
+    public Node addKeyword(String keyword) {
+        keywords.add(keyword);
+        return this;
     }
 }

@@ -3,6 +3,7 @@ package sys.dm.controller;
 import sys.dm.api.OKMDocument;
 import sys.dm.bean.Document;
 import sys.dm.bean.FileUploadResponse;
+import sys.dm.bean.Node;
 import sys.dm.core.FileSizeExceededException;
 import sys.dm.util.TempFile;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.UUID;
 
 @RestController
 public class FileUploadController {
@@ -39,9 +41,8 @@ public class FileUploadController {
             bos.flush();
             fos.flush();
 
-            Document newDoc = new Document("");
             String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
-            newDoc.setPath(newPath);
+            Document newDoc = new Document(UUID.randomUUID(), "", newPath, "jpg", new Node());
             newDoc = OKMDocument.INSTANCE.create(null, newDoc, fis);
 
             log.debug("newDoc: {}, {}", newPath, newDoc);

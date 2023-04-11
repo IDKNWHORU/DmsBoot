@@ -1,28 +1,15 @@
 package sys.dm.bean;
 
 import java.util.Calendar;
-import java.util.Set;
+import java.util.UUID;
 
 public record Document(
-        String title
+        UUID uuid,
+        String title,
+        String path,
+        String mimeType,
+        Node node
 ) {
-    private static final Node node = new Node();
-
-    public void setPath(String path) {
-        node.setPath(path);
-    }
-
-    public String getPath() {
-        return node.getPath();
-    }
-
-    public Set<String> getKeywords() {
-        return node.getKeywords();
-    }
-
-    public Calendar getCreated() {
-        return null;
-    }
 
     @Override
     public String toString() {
@@ -33,11 +20,7 @@ public record Document(
         return String.format(serializedEntity, title, node.getPath(), node.getKeywords());
     }
 
-    public String getUuid() {
-        return "";
-    }
-
-    public void setMimeType(String mimeType) {
-
+    public Calendar getCreated() {
+        return Calendar.getInstance();
     }
 }

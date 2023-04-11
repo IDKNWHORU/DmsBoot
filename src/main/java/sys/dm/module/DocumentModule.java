@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sys.dm.bean.Document;
 import sys.dm.bean.FileUploadResponse;
+import sys.dm.bean.Node;
 import sys.dm.bean.NodeBase;
 import sys.dm.core.*;
 import sys.dm.dto.NodeDocumentDTO;
@@ -46,8 +47,8 @@ public class DocumentModule {
         long begin = System.currentTimeMillis();
         Document newDocument = null;
 
-        if (!PathUtils.checkPath(doc.getPath())) {
-            throw new RepositoryException("Invalid path: " + doc.getPath());
+        if (!PathUtils.checkPath(doc.path())) {
+            throw new RepositoryException("Invalid path: " + doc.path());
         }
 
         String parentPath = null;
@@ -61,8 +62,8 @@ public class DocumentModule {
 //            name = doc.getTitle();
 //        }
         if (parentPath == null || name == null) {
-            parentPath = PathUtils.getParent(doc.getPath());
-            name = PathUtils.getName(doc.getPath());
+            parentPath = PathUtils.getParent(doc.path());
+            name = PathUtils.getName(doc.path());
         }
 
         int extIdx = name.lastIndexOf(".");
@@ -87,10 +88,9 @@ public class DocumentModule {
             name = PathUtils.escape(name);
 
             if (!name.isEmpty()) {
-                doc.setPath(parentPath + "/" + name);
 
                 String mimeType = MimeTypeConfig.mimeTypes.getContentType(name.toLowerCase());
-                doc.setMimeType(mimeType);
+                Document newDoc = new Document(doc.uuid(), doc.title(), parentPath + "/" + name, mimeType, doc.node());
 
                 if (Config.RESTRICT_FILE_MIME && MimeTypeDAO.findByName(mimeType) == null) {
 //                    String usr
@@ -116,7 +116,7 @@ public class DocumentModule {
 //                log.debug("parent uuid is {}", parentUuid);
                 NodeBase parentNode = nodeBaseRepository.findById(UUID.randomUUID()).orElse(new NodeBase(""));
 
-                Set<String> keywords = Optional.ofNullable(doc.getKeywords()).orElseGet(HashSet::new);
+                Set<String> keywords = Optional.ofNullable(doc.node().getKeywords()).orElseGet(HashSet::new);
                 Calendar created = Optional.ofNullable(doc.getCreated()).orElse(Calendar.getInstance());
                 NodeDocumentDTO newDocumentRequest = new NodeDocumentDTO(
                         null,
@@ -153,9 +153,9 @@ public class DocumentModule {
             }
         }
 
-        SystemProfiling.log(doc.getPath(), System.currentTimeMillis() - begin);
+        SystemProfiling.log(doc.path(), System.currentTimeMillis() - begin);
         log.trace("create.Time: {}", System.currentTimeMillis() - begin);
         log.debug("create: {}", newDocument);
-        return new Document("");
+        return new Document(UUID.randomUUID(), "", "okm:/root", "jpg", new Node());
     }
 }
