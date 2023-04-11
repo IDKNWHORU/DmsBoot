@@ -46,7 +46,7 @@ public class BaseDocumentModule {
 
     public <E> NodeDocumentDTO create(NodeDocumentDTO nodeDocumentDTO,
                                       InputStream is, long size, Set<String> keywords, HashSet<E> categories, HashSet<E> propertyGroups,
-                                      ArrayList<E> notes, Object o1, FileUploadResponse fuResponse) {
+                                      ArrayList<E> notes, Object o1) {
         String path = "";
 
         if (Config.STORE_NODE_PATH) {

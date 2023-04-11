@@ -1,23 +1,21 @@
 package sys.dm.controller;
 
-import sys.dm.api.OKMDocument;
-import sys.dm.bean.Document;
-import sys.dm.bean.FileUploadResponse;
-import sys.dm.bean.Node;
-import sys.dm.core.FileSizeExceededException;
-import sys.dm.util.TempFile;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sys.dm.api.OKMDocument;
+import sys.dm.bean.Document;
+import sys.dm.bean.Node;
+import sys.dm.core.FileSizeExceededException;
+import sys.dm.util.TempFile;
 
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -29,7 +27,6 @@ public class FileUploadController {
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException, FileSizeExceededException {
         log.debug("doPost({})", request);
 
-        FileUploadResponse fuResponse = new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false, false, false, false, "", "");
         try (TempFile tempFileWrapper = new TempFile("okm", ".tmp");
              FileOutputStream fos = new FileOutputStream(tempFileWrapper.getFile());
              BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -48,6 +45,8 @@ public class FileUploadController {
             log.debug("newDoc: {}, {}", newPath, newDoc);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
         return ResponseEntity.ok("upload success");

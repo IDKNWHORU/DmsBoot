@@ -3,7 +3,6 @@ package sys.dm.module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sys.dm.bean.Document;
-import sys.dm.bean.FileUploadResponse;
 import sys.dm.bean.Node;
 import sys.dm.bean.NodeBase;
 import sys.dm.core.*;
@@ -38,12 +37,12 @@ public class DocumentModule {
         return BaseDocumentModule.getProperties("", docNode);
     }
 
-    public Document create(String token, Document doc, InputStream is, long size, String userId, FileUploadResponse fuResponse) throws Exception, FileSizeExceededException {
-        return create(token, doc, is, size, userId, fuResponse, null);
+    public Document create(String token, Document doc, InputStream is, long size, String userId) throws Exception, FileSizeExceededException {
+        return create(token, doc, is, size, userId, null);
     }
 
-    public Document create(String token, Document doc, InputStream is, long size, String userId, FileUploadResponse fuResponse, String emailSubject) throws Exception, FileSizeExceededException {
-        log.debug("create({}, {}, {}, {}, {}, {}, {})", token, doc, is, size, userId, fuResponse, emailSubject);
+    public Document create(String token, Document doc, InputStream is, long size, String userId, String emailSubject) throws Exception, FileSizeExceededException {
+        log.debug("create({}, {}, {}, {}, {}, {}, {})", token, doc, is, size, userId, emailSubject);
         long begin = System.currentTimeMillis();
         Document newDocument = null;
 
@@ -138,16 +137,9 @@ public class DocumentModule {
                                 new HashSet<>(),
                                 new HashSet<>(),
                                 new ArrayList<>(),
-                                null,
-                                fuResponse);
+                                null);
 
                 newDocument = BaseDocumentModule.getProperties("", docNode);
-
-                if (fuResponse == null) {
-                    fuResponse = new FileUploadResponse(new ArrayList<>(), new ArrayList<>(), false,
-                            false, false, false,
-                            "", "");
-                }
             } else {
                 throw new RepositoryException("Invalid document name");
             }
