@@ -26,10 +26,6 @@ class DemoApplicationTests {
     }
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     void test() {
         NodeDocument nodeDocument = NodeDocument.builder().uuid(UUID.fromString("033f1451-4d29-477a-876e-ef94dc6d606c")).build();
 
