@@ -26,6 +26,7 @@ import sys.dm.module.DocumentModule;
 import sys.dm.module.ModuleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sys.dm.repository.NodeBaseRepository;
 
 import java.io.InputStream;
 
@@ -36,9 +37,9 @@ public enum OKMDocument {
     OKMDocument() {
     }
 
-    public Document create(String token, Document doc, InputStream is) {
+    public Document create(String token, Document doc, InputStream is, NodeBaseRepository nodeBaseRepository) {
         log.debug("create({}, {}, {})", token, doc, is);
-        DocumentModule documentModule = ModuleManager.getDocumentModule();
+        DocumentModule documentModule = ModuleManager.getDocumentModule(nodeBaseRepository);
         Document newDocument = documentModule.create(token, doc, is);
         log.debug("create: {}", newDocument);
         return newDocument;

@@ -24,6 +24,7 @@ package sys.dm.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ import sys.dm.api.OKMDocument;
 import sys.dm.bean.Document;
 import sys.dm.bean.Node;
 import sys.dm.core.FileSizeExceededException;
+import sys.dm.repository.NodeBaseRepository;
 import sys.dm.util.TempFile;
 
 import java.io.BufferedOutputStream;
@@ -43,6 +45,13 @@ import java.util.UUID;
 @RestController
 public class FileUploadController {
     private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
+    private final NodeBaseRepository nodeBaseRepository;
+
+    @Autowired
+    public FileUploadController(NodeBaseRepository nodeBaseRepository) {
+        this.nodeBaseRepository = nodeBaseRepository;
+    }
+
 
     @PostMapping("/FileUpload")
     public ResponseEntity<String> post(HttpServletRequest request) throws IOException, FileSizeExceededException {
@@ -61,7 +70,7 @@ public class FileUploadController {
             String path = request.getAttribute("path").toString();
             String newPath = path.substring(0, path.lastIndexOf(".") + 1) + "pdf";
             Document newDoc = new Document(UUID.randomUUID(), "", newPath, "jpg", new Node());
-            newDoc = OKMDocument.INSTANCE.create(null, newDoc, fis);
+            newDoc = OKMDocument.INSTANCE.create(null, newDoc, fis, nodeBaseRepository);
 
             log.debug("newPath: {}, newDoc: {}", newPath, newDoc);
         } catch (Exception e) {

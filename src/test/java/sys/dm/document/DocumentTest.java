@@ -18,7 +18,7 @@ public class DocumentTest {
             Node keywordAddedNode = newNode.addKeyword("key1").addKeyword("key2");
 
             Document doc = new Document(UUID.randomUUID(), "test document123", "/okm:root", "text", keywordAddedNode);
-            Document newDoc = OKMDocument.INSTANCE.create(null, doc, is);
+            Document newDoc = OKMDocument.INSTANCE.create(null, doc, is, null);
             System.out.println(doc.equals(newDoc));
         } catch (Exception e) {
             e.printStackTrace();

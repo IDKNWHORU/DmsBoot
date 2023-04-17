@@ -26,9 +26,8 @@ import sys.dm.repository.NodeBaseRepository;
 public class ModuleManager {
     private static DocumentModule documentModule;
 
-    public static synchronized DocumentModule getDocumentModule() {
+    public static synchronized DocumentModule getDocumentModule(NodeBaseRepository nodeBaseRepository) {
         if (documentModule == null) {
-            NodeBaseRepository nodeBaseRepository = null;
             documentModule = new DocumentModule(nodeBaseRepository);
         }
 

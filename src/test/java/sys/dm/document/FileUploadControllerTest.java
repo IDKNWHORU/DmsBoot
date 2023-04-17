@@ -10,7 +10,7 @@ public class FileUploadControllerTest {
     private static final Logger log = LoggerFactory.getLogger(FileUploadControllerTest.class);
 
     public static void main(String... args) {
-        FileUploadController fc = new FileUploadController();
+        FileUploadController fc = new FileUploadController(null);
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setAttribute("path", "okm:root");
         request.setAttribute("data", "aGVsbG8gd29ybGQ=");
